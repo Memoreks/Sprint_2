@@ -1,96 +1,101 @@
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Scanner;
+
+import Classes.*;
 
 public class Sprint_2 {
+    public static Manager taskManager = new Manager();
+    public static HashMap<Integer, Task> tasks = new HashMap<>();
+    public static HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    public static HashMap<Integer, Epic> epics = new HashMap<>();
     public static void main(String[] args) {
-
-        HashMap tasks = new HashMap();
-        HashMap subtasks = new HashMap();
-        HashMap epics = new HashMap();
-
+        //Создание тестовых задач
         String name = "Задача";
         String description = "Пробная задача";
-        Task task = new Task(name, description, tasks.size());
-        tasks.put(tasks.size(), task);
-
+        String status = "NEW";
+        Task task = new Task(name, description, status, taskManager.addId());
+        tasks.put(task.getId(), task);
         name = "Подзадача";
-        Subtask subtask = new Subtask(name, description, subtasks.size(), 1);
-        subtasks.put(subtasks.size(), subtask);
-
+        description = "Пробная подзадача 1";
+        Subtask subtask = new Subtask(name, description, status, taskManager.addId(), 1);
+        subtasks.put(task.getId(), subtask);
         name = "Большая задача";
-        Epic epic = new Epic(name, description, epics.size());
-        epics.put(epics.size(), epic);
+        description = "Пробная большая задача 1";
+        Epic epic = new Epic(name, description, status, taskManager.addId());
+        epics.put(task.getId(), epic);
 
-        System.out.println("Список задач:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("Key :"+i + "   Value :"+tasks.get(i));
+        Scanner scanner = new Scanner(System.in);
+        printmenu();
+        int userInput = scanner.nextInt();
+        while (userInput != 0) {
+            if (userInput == 1) {
+                System.out.println(taskManager.out_tasks(tasks));
+                System.out.println(taskManager.out_subtasks(subtasks));
+                System.out.println(taskManager.out_epics(epics));
+                //Добавить проверку ввывода
+            }else if (userInput == 2) {
+                System.out.println("Вы уверены, что хотите удалить все задачи?(Введите Y/N)");
+                String answer_delete = scanner.next();
+                if (answer_delete.equals("Y")) {
+                    tasks = null;
+                    subtasks = null;
+                    epics = null;
+                    System.out.println("Удаление произведено");
+                } else if (answer_delete.equals("N")) {
+                    System.out.println("Удаление отменено");
+                } else {
+                    System.out.println("Невозможно обработать Ваш ответ");
+                }
+            }else if (userInput == 5) {
+                System.out.println("Введите ID задачи: ");
+                int id = scanner.nextInt();
+                System.out.println("Введите новое название задачи: ");
+                name = scanner.next();
+                System.out.println("Введите новое описание задачи: ");
+                description = scanner.next();
+                System.out.println("Выберите новой статус задачи(0 - new, 1 - working, 2 - done): ");
+                int status_id = scanner.nextInt();
+                if(status_id == 0) {
+                    status = "NEW";
+                } else if(status_id == 1) {
+                    status = "WORKING";
+                } else if(status_id == 2) {
+                    status = "DONE";
+                } else {
+                    status = "ERROR";
+                }
+                //Добавить определение типа задачи
+                task = new Task(name, description, status, id);
+                updateTask(task);
+            }else{
+                System.out.println("Введенная команда " + userInput + " не поддерживается.");
+            }
+            printmenu();
+            userInput = scanner.nextInt();
         }
-        System.out.println("Список подзадач:");
-        for (int i = 0; i < subtasks.size(); i++) {
-            System.out.println("Key :"+i + "   Value :"+subtasks.get(i));
-        }
-        System.out.println("Список епиков:");
-        for (int i = 0; i < epics.size(); i++) {
-            System.out.println("Key :"+i + "   Value :"+epics.get(i));
-        }
+        System.out.println("Программа завершена");
     }
 
-    /*public static int manager(){
-        int id;
-        id = tasks.size();
-        return id;
-        Класс для объекта менеджера
-        Объект менеджер
-        Хранение всех типов задач - выбрать коллекцию
-        Методы - Получение списка всех задач, Удаление всех задач, Получение задачи по ИД, создание задачи, сам объект должен передаваться в качестве параметра,
-        обновление задачи, новая версия объекта и ИД передаются ввиде параметра, удаление по ИД
-        Дополнительно - получение всех подзадач эпика
-
-        ИД уникальное значение для 3-х хешмапов
-
-        Статус приходит вместе с информацией о задаче, у эпиков статус пользователь поменять не может
-
-        В хешмап надо записывать объект
-
-        public void updateEpic(Epic epic)
-        epics.put(epic.getId(), epic)
-    }*/
-}
-
-class Task {
-    String name;
-    String description;
-    int id;
-    int status;
-
-    public Task(String name, String description, int id) {
-        this.name = name;
-        this.description = description;
-        this.id = id; // назначение через менеджера
-        this.status = 0;
-        /*
-        new - 0
-        in_progress - 1
-        done - 2
-        Сделать хешмапы Ид - название задачи
-        */
+    private static void printmenu(){ //Метод печати меню в консоли
+        System.out.println("Меню программы, введите команду:");
+        System.out.println("1 - Вывести списки всех задач");
+        System.out.println("2 - Удалить все задачи");
+        System.out.println("3 - Получить задачу по ИД");
+        System.out.println("4 - Создать задачу");//сам объект должен передаваться в качестве параметра
+        System.out.println("5 - Обновить задачу");//новая версия объекта и ИД передаются ввиде параметра
+        System.out.println("6 - Удалить задачу по ИД");
+        System.out.println("7 - Вывести все подзадачи эпика по ИД");
+        System.out.println("0 - выход");
     }
-}
 
-class Subtask extends Task{
-       int id_epictask;
-
-       public Subtask(String name, String description, int id, int id_epictask){
-           super(name, description, id);
-           this.id_epictask = id_epictask;
-       }
-}
-//Разобраться с определением массива
-class Epic extends Task{
-    int[] id_subtask = {0};//Неограниченное число подзадач - переделать
-
-    public Epic(String name, String description, int id){
-        super(name, description, id);
-        this.id_subtask[0] = 1;
+    //Объединить в один метод?
+    public static void updateTask(Task task) {
+        tasks.put(task.getId(), task);
+    }
+    public static void updateSubtask(Subtask subtask) {
+        subtasks.put(subtask.getId(), subtask);
+    }
+    public static void updateTask(Epic epic) {
+        epics.put(epic.getId(), epic);
     }
 }
