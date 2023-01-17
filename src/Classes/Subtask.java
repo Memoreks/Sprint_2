@@ -1,11 +1,11 @@
 package Classes;
 
 public class Subtask extends Task {
-    int id_epictask;
+    int idEpicTask;
 
-    public Subtask(String name, String description, String status, int id, int id_epictask) {
+    public Subtask(String name, String description, String status, int id, int idEpicTask) {
         super(name, description, status, id);
-        this.id_epictask = id_epictask;
+        this.idEpicTask = idEpicTask;
     }
 
     public int getId(){
@@ -14,6 +14,6 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "\nname: " + this.name + "\ndescription: " + this.description + "\nstatus: " + this.status;
+        return "\nname: " + this.name + "\ndescription: " + this.description + "\nstatus: " + this.status + "\nid to epic: " + this.idEpicTask;
     }
 }
