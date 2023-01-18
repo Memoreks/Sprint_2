@@ -1,12 +1,20 @@
 package Classes;
 
-//Разобраться с определением массива
+import java.util.ArrayList;
+
 public class Epic extends Task {
-    int[] id_subtask = {0};//Неограниченное число подзадач - переделать
+    ArrayList<Integer> idSubtasks = new ArrayList<>();
 
     public Epic(String name, String description, String status, int id) {
         super(name, description, status, id);
-        this.id_subtask[0] = 1;
+    }
+
+    public void setIdSubtasks(int idSubtasks) {
+        this.idSubtasks.add(idSubtasks);
+    }
+
+    public ArrayList<Integer> getIdSubtasks() {
+        return idSubtasks;
     }
 
     public int getId(){
@@ -15,6 +23,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "\nname: " + this.name + "\ndescription: " + this.description + "\nstatus: " + this.status;
+        return "\nИД: "+ this.id + "\nИмя: " + this.name + "\nОписание: " + this.description + "\nСтатус: "
+                + this.status + "\nКакие подзадачи содержит: " + this.idSubtasks;
     }
 }
