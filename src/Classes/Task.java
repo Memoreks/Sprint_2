@@ -19,7 +19,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "\nИД: "+ this.id + "\nИмя: " + this.name + "\nОписание: " + this.description + "\nСтатус: "
+        return "\nID: "+ this.id + "\nName: " + this.name + "\nDescription: " + this.description + "\nStatus: "
                 + this.status;
     }
 }

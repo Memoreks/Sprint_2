@@ -6,27 +6,31 @@ import java.util.Scanner;
 import Classes.*;
 
 public class Sprint_2 {
-    public static Manager taskManager = new Manager();
     public static HashMap<Integer, Task> tasks = new HashMap<>();
     public static HashMap<Integer, Subtask> subtasks = new HashMap<>();
     public static HashMap<Integer, Epic> epics = new HashMap<>();
-    public static List<HashMap> listHashMaps = new ArrayList<>();
+    public static List<Task> listTask = new ArrayList<>();
+    public static Manager taskManager = new Manager();
 
     public static void main(String[] args) {
-        //Создание тестовых задач
-        String name = "Задача";
-        String description = "Пробная задача";
+        //Create test tasks
+        String name = "Task";
+        String description = "Test task";
         String status = "NEW";
         Task task = new Task(name, description, status, taskManager.addId());
         updateTask(task);
-        name = "Большая задача";
-        description = "Пробная большая задача 1";
+        name = "Epic task";
+        description = "Test epic task 1";
         Epic epic = new Epic(name, description, status, taskManager.addId());
         updateEpic(epic);
-        name = "Подзадача";
-        description = "Пробная подзадача 1";
+        name = "Subtask";
+        description = "Subtask 1";
         int idToEpic = 2;
         Subtask subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
+        updateSubtask(subtask);
+        subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
+        updateSubtask(subtask);
+        subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
         updateSubtask(subtask);
 
         Scanner scanner = new Scanner(System.in);
@@ -49,24 +53,24 @@ public class Sprint_2 {
             }else if (userInput == 7) {
                 getAllTaskByEpic();
             }else{
-                System.out.println("Введенная команда " + userInput + " не поддерживается.");
+                System.out.println("Command " + userInput + " not supported");
             }
             printMenu();
             userInput = scanner.nextInt();
         }
-        System.out.println("Программа завершена");
+        System.out.println("Program completed");
     }
 
-    private static void printMenu(){ //Метод печати меню в консоли
-        System.out.println("Меню программы, введите команду:");
-        System.out.println("1 - Вывести списки всех задач");//Готово
-        System.out.println("2 - Удалить все задачи");//Готово
-        System.out.println("3 - Вывести задачу по ИД");//Готово - сделать красивый вывод задачи
-        System.out.println("4 - Создать задачу");//Готово
-        System.out.println("5 - Обновить задачу");//Готово, кроме обновления статусов у Эпиков и опредения типа задачи
-        System.out.println("6 - Удалить задачу по ИД");//Не готово, контроль у эпика ИД подзадачи
-        System.out.println("7 - Вывести все подзадачи эпика по ИД");//Готово - сделать красивый вывод задачи
-        System.out.println("0 - Выход");
+    private static void printMenu(){
+        System.out.println("Menu, enter comand:");
+        System.out.println("1 - List all tasks");//Done
+        System.out.println("2 - Delete all task");//Done
+        System.out.println("3 - Show task by ID");//Done - create input task
+        System.out.println("4 - Create task");//Done
+        System.out.println("5 - Update task");//Done, кроме обновления статусов у Эпиков и опредения типа задачи
+        System.out.println("6 - Delete task by ID");//Done, контроль у эпика ИД подзадачи, удаление эпика и подзадач
+        System.out.println("7 - Show all task of Epic");//Done - create input task
+        System.out.println("0 - Exit");
     }
 
     public static void showAllTask(){
@@ -79,38 +83,38 @@ public class Sprint_2 {
                 System.out.println(taskManager.outEpics(epics));
         }
         else{
-            System.out.println("Список задач пуст");
+            System.out.println("Task list is empty");
         }
     }
 
     public static void deleteAllTask(){
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Вы уверены, что хотите удалить все задачи?(Введите Y/N)");
+        System.out.println("Are you sure you want to delete all tasks??(Y/N)");
         String answerDelete = scanner.next();
         if (answerDelete.equals("Y")) {
             tasks.clear();
             subtasks.clear();
             epics.clear();
-            listHashMaps.clear();
+            listTask.clear();
             taskManager.setId(0);
-            System.out.println("Удаление произведено");
+            System.out.println("Deletion completed");
         } else if (answerDelete.equals("N")) {
-            System.out.println("Удаление отменено");
+            System.out.println("Deletion canceled");
         } else {
-            System.out.println("Невозможно обработать Ваш ответ");
+            System.out.println("Command not supported");
         }
     }
 
     public static void getTaskById(){
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Введите ID задачи: ");
+        System.out.println("Input task ID: ");
         int id = scanner.nextInt();
-        if(id <= listHashMaps.size())
-            System.out.println(listHashMaps.get(id-1));
+        if(id <= listTask.size())
+            System.out.println(listTask.get(id-1));
         else
-            System.out.println("Задача с введенным ID не найдена");
+            System.out.println("Task not found");
     }
 
     public static void createTask(){
@@ -125,15 +129,15 @@ public class Sprint_2 {
         Epic epic;
         int idToEpic;
 
-        System.out.println("Выберите тип задачи(1 - обычная задача, 2 - подзадача, 3 - эпик): ");
+        System.out.println("Select task type(1 - task, 2 - subtask, 3 - epic): ");
         taskType = scanner.nextInt();
-        System.out.println("Введите новое название задачи: ");
+        System.out.println("Input name task: ");
         name = scanner.next();
-        System.out.println("Введите новое описание задачи: ");
+        System.out.println("Input description task: ");
         description = scanner.next();
         switch (taskType){
             case 1: {
-                System.out.println("Выберите новой статус задачи(0 - new, 1 - working, 2 - done): ");
+                System.out.println("Select status task(0 - new, 1 - working, 2 - done): ");
                 statusId = scanner.nextInt();
                 if(statusId == 0) {
                     status = "NEW";
@@ -142,14 +146,15 @@ public class Sprint_2 {
                 } else if(statusId == 2) {
                     status = "DONE";
                 } else {
-                    status = "ERROR";
+                    System.out.println("Command not support");
+                    break;
                 }
                 task = new Task(name, description, status, taskManager.addId());
                 updateTask(task);
                 break;
             }
             case 2: {
-                System.out.println("Выберите новой статус задачи(0 - new, 1 - working, 2 - done): ");
+                System.out.println("Select status task(0 - new, 1 - working, 2 - done): ");
                 statusId = scanner.nextInt();
                 if(statusId == 0) {
                     status = "NEW";
@@ -158,17 +163,17 @@ public class Sprint_2 {
                 } else if(statusId == 2) {
                     status = "DONE";
                 } else {
-                    System.out.println("Ошибка указан несуществующий статус задачи");
+                    System.out.println("Command not support");
                     break;
                 }
-                System.out.println("Введите ID эпика: ");
+                System.out.println("Input epic ID: ");
                 idToEpic = scanner.nextInt();
                 if(epics.get(idToEpic) != null) {
                     subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
                     updateSubtask(subtask);
                 }
                 else {
-                    System.out.println("Ошибка эпик с указанным ID не найден");
+                    System.out.println("Epic not found");
                 }
                 break;
             }
@@ -179,7 +184,7 @@ public class Sprint_2 {
                 break;
             }
             default:{
-                System.out.println("Введен не правильный тип задачи");
+                System.out.println("Command not support");
             }
         }
     }
@@ -191,13 +196,13 @@ public class Sprint_2 {
         String status;
         Task task;
 
-        System.out.println("Введите ID задачи: "); //Добавить ввывод текущих значений полей объекта
+        System.out.println("Input task ID: "); //Добавить ввывод текущих значений полей объекта
         int id = scanner.nextInt();
-        System.out.println("Введите новое название задачи: ");
+        System.out.println("Input new task name: ");
         name = scanner.next();
-        System.out.println("Введите новое описание задачи: ");
+        System.out.println("Input new description task: ");
         description = scanner.next();
-        System.out.println("Выберите новой статус задачи(0 - new, 1 - working, 2 - done): ");
+        System.out.println("Select new status task(0 - new, 1 - working, 2 - done): ");
         int statusId = scanner.nextInt();
         if(statusId == 0) {
             status = "NEW";
@@ -215,43 +220,58 @@ public class Sprint_2 {
 
     public static void deleteTaskById(){
         Scanner scanner = new Scanner(System.in);
+        Subtask subtask;
+        Epic epic;
 
-        System.out.println("Введите ID задачи: ");
+        System.out.println("Input task ID: ");
         int id = scanner.nextInt();
-        System.out.println(listHashMaps.get(id));
+        if(tasks.get(id) != null) {
+            tasks.remove(id);
+        }
+        else if(subtasks.get(id) != null) {
+            subtask = subtasks.get(id);
+            epic = epics.get(subtask.getIdEpicTask());
+            epic.setIdSubtasks(subtask.getId(),2);
+            subtasks.remove(id);
+        }
+        else if(epics.get(id) != null) {
+            epics.remove(id);
+        }
+        else {
+            System.out.println("Task not found");
+        }
+        System.out.println(id + " deleted");
     }
 
     public static void getAllTaskByEpic(){
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Integer> idSubtasks;
         Epic epic;
 
-        System.out.println("Введите ID эпика: ");
+        System.out.println("Input epic ID: ");
         int id = scanner.nextInt();
         if(epics.get(id) != null){
             epic = epics.get(id);
-            idSubtasks = epic.getIdSubtasks();
-            for(int key: idSubtasks)
-                System.out.println(listHashMaps.get(key-1));
-            //Вывод субтасков
+            for (int key : epic.getIdSubtasks()) {
+                System.out.println("\n" + listTask.get(key-1) + "\n");
+            }
         }
         else{
-            System.out.println("Ошибка эпика с указанным ID не существует");
+            System.out.println("Epic not found");
         }
     }
 
     public static void updateTask(Task task) {
         tasks.put(task.getId(), task);
-        listHashMaps.add(tasks);
+        listTask.add(task);
     }
     public static void updateSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
-        listHashMaps.add(subtasks);
+        listTask.add(subtask);
         Epic epic = epics.get(subtask.getIdEpicTask());
-        epic.setIdSubtasks(subtask.getId());
+        epic.setIdSubtasks(subtask.getId(),1);
     }
     public static void updateEpic(Epic epic) {
         epics.put(epic.getId(), epic);
-        listHashMaps.add(epics);
+        listTask.add(epic);
     }
 }

@@ -1,19 +1,28 @@
 package Classes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    ArrayList<Integer> idSubtasks = new ArrayList<>();
+    List<Integer> idSubtasks = new ArrayList<>();
 
     public Epic(String name, String description, String status, int id) {
         super(name, description, status, id);
     }
 
-    public void setIdSubtasks(int idSubtasks) {
-        this.idSubtasks.add(idSubtasks);
+    public void setIdSubtasks(int idSubtasks, int type) {
+        if(type == 1)
+            this.idSubtasks.add(idSubtasks);
+        if(type == 2) {
+            for(int key : this.idSubtasks)
+            {
+                if(this.idSubtasks.get(key) == idSubtasks)
+                    this.idSubtasks.remove(key);
+            }
+        }
     }
 
-    public ArrayList<Integer> getIdSubtasks() {
+    public List<Integer> getIdSubtasks() {
         return idSubtasks;
     }
 
@@ -23,7 +32,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "\nИД: "+ this.id + "\nИмя: " + this.name + "\nОписание: " + this.description + "\nСтатус: "
-                + this.status + "\nКакие подзадачи содержит: " + this.idSubtasks;
+        return "\nID: "+ this.id + "\nName: " + this.name + "\nDescription: " + this.description + "\nStatus: "
+                + this.status + "\nSubtasks: " + this.idSubtasks.toString();
     }
 }
