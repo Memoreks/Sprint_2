@@ -1,5 +1,7 @@
 package Classes;
 
+import java.util.Objects;
+
 public class Subtask extends Task {
     int idEpicTask;
 
@@ -20,5 +22,27 @@ public class Subtask extends Task {
 
     public int getIdEpicTask(){
         return this.idEpicTask;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        Subtask otherSubtask = (Subtask) obj;
+        return Objects.equals(name, otherSubtask.name) && Objects.equals(description, otherSubtask.description)
+                && Objects.equals(status, otherSubtask.status);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        if(name != null && description != null) {
+            hash = hash + Objects.hash(name, description);
+        }
+        if(status != null) {
+            hash = hash * 31 + status.hashCode();
+        }
+        return hash;
     }
 }
