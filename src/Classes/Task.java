@@ -32,24 +32,18 @@ public class Task {
         if (this.getClass() != obj.getClass()) return false;
         Task otherTask = (Task) obj;
         return Objects.equals(name, otherTask.name) && Objects.equals(description, otherTask.description)
-                && Objects.equals(status, otherTask.status);
+                && Objects.equals(status, otherTask.status) && (id == otherTask.id);
     }
 
     @Override
     public int hashCode() {
         int hash = 17;
-        if(name != null) {
-            hash = hash + name.hashCode();
+        if((name != null) && (description != null)) {
+            hash = hash + Objects.hash(name, description);
         }
-        hash = hash * 31;
-        if(description != null) {
-            hash = hash + description.hashCode();
-        }
-        hash = hash * 31;
         if(status != null) {
-            hash = hash + status.hashCode();
+            hash = hash * 31 + status.hashCode() + id;
         }
-        hash = hash * 31;
         return hash;
     }
 }

@@ -17,7 +17,7 @@ public class Manager {
     Epic epic;
 
     public Manager() {
-        int id = 0;
+        id = 0;
         listHashMaps.add(tasks);
         listHashMaps.add(subtasks);
         listHashMaps.add(epics);
@@ -67,12 +67,12 @@ public class Manager {
         tasks.put(task.getId(), task);
     }
     public void updateSubtask(Subtask subtask) {
-        subtasks.put(subtask.getId(), subtask);//Добавить контроль статуса епика
+        subtasks.put(subtask.getId(), subtask);
         Epic epic = epics.get(subtask.getIdEpicTask());
         epic.setSubtasks(subtask,1);
     }
     public void updateEpic(Epic epic) {
-        epics.put(epic.getId(), epic); //Добавить контроль статуса епика
+        epics.put(epic.getId(), epic);
     }
 
     public void showAllTask(){
@@ -82,7 +82,7 @@ public class Manager {
             if(!subtasks.isEmpty())
                 System.out.println(this.outSubtasks(subtasks));
             if(!epics.isEmpty())
-                System.out.println(this.outEpics(epics));
+                System.out.println(this.outEpics(epics));//Можно сделать вывод меньшим кол-вом методов?
         }
         else{
             System.out.println("Task list is empty");
@@ -96,7 +96,6 @@ public class Manager {
             tasks.clear();
             subtasks.clear();
             epics.clear();
-            listHashMaps.clear();
             this.setId(0);
             System.out.println("Deletion completed");
         } else if (answerDelete.equals("N")) {
@@ -120,14 +119,14 @@ public class Manager {
         name = scanner.next();
         System.out.println("Input description task: ");
         description = scanner.next();
-        switch (taskType){
+        switch (taskType){//Можно уменьшить количество повторов в создание задачи?
             case 1: {
-                System.out.println("Select status task(0 - new, 1 - working, 2 - done): ");
+                System.out.println("Select status task(0 - new, 1 - in_progress, 2 - done): ");
                 statusId = scanner.nextInt();
                 if(statusId == 0) {
                     status = "NEW";
                 } else if(statusId == 1) {
-                    status = "WORKING";
+                    status = "IN_PROGRESS";
                 } else if(statusId == 2) {
                     status = "DONE";
                 } else {
@@ -139,12 +138,12 @@ public class Manager {
                 break;
             }
             case 2: {
-                System.out.println("Select status task(0 - new, 1 - working, 2 - done): ");
+                System.out.println("Select status task(0 - new, 1 - in_progress, 2 - done): ");
                 statusId = scanner.nextInt();
                 if(statusId == 0) {
                     status = "NEW";
                 } else if(statusId == 1) {
-                    status = "WORKING";
+                    status = "IN_PROGRESS";
                 } else if(statusId == 2) {
                     status = "DONE";
                 } else {
@@ -178,27 +177,24 @@ public class Manager {
         String name;
         String description;
         String status;
-        Task oldTask = null;
-        Subtask oldSubtask = null;
-        Epic oldEpic = null;
-        int statusId = 0;
+        int statusId;
 
         System.out.println("Input task ID: ");
-        int id = scanner.nextInt();
+        int id = scanner.nextInt();//Можно уменьшить кол-во методов для обновления задачи?
         for (HashMap hashMapIterator : listHashMaps) {
             if (hashMapIterator.get(id) != null) {
                 if(hashMapIterator.get(id).getClass() == Task.class) {
-                    oldTask = (Task) hashMapIterator.get(id);
-                    System.out.println("Old name:" + oldTask.name + "\nInput new task name: ");
+                    task = (Task) hashMapIterator.get(id);
+                    System.out.println("Old name: " + task.name + "\nInput new task name: ");
                     name = scanner.next();
-                    System.out.println("Old description:" + oldTask.description + "\nInput new description task: ");
+                    System.out.println("Old description: " + task.description + "\nInput new description task: ");
                     description = scanner.next();
-                    System.out.println("Old status:" + oldTask.status + "\nSelect new status task(0 - new, 1 - working, 2 - done): ");
+                    System.out.println("Old status: " + task.status + "\nSelect new status task(0 - new, 1 - in_progress, 2 - done): ");
                     statusId = scanner.nextInt();
                     if(statusId == 0) {
                         status = "NEW";
                     } else if(statusId == 1) {
-                        status = "WORKING";
+                        status = "IN_PROGRESS";
                     } else if(statusId == 2) {
                         status = "DONE";
                     } else {
@@ -208,45 +204,42 @@ public class Manager {
                     updateTask(task);
                 }
                 if(hashMapIterator.get(id).getClass() == Subtask.class) {
-                    oldSubtask = (Subtask) hashMapIterator.get(id);
-                    System.out.println("Old name:" + oldSubtask.name + "\nInput new task name: ");
+                    subtask = (Subtask) hashMapIterator.get(id);
+                    System.out.println("Old name: " + subtask.name + "\nInput new task name: ");
                     name = scanner.next();
-                    System.out.println("Old description:" + oldSubtask.description + "\nInput new description task: ");
+                    System.out.println("Old description: " + subtask.description + "\nInput new description task: ");
                     description = scanner.next();
-                    System.out.println("Old status:" + oldSubtask.status + "\nSelect new status task(0 - new, 1 - working, 2 - done): ");
+                    System.out.println("Old status: " + subtask.status
+                            + "\nSelect new status task(0 - new, 1 - in_progress, 2 - done): ");
                     statusId = scanner.nextInt();
                     if(statusId == 0) {
                         status = "NEW";
                     } else if(statusId == 1) {
-                        status = "WORKING";
+                        status = "IN_PROGRESS";
                     } else if(statusId == 2) {
                         status = "DONE";
                     } else {
                         status = "ERROR";
                     }
-                    subtask = new Subtask(name, description, status, id, oldSubtask.idEpicTask);
+                    Epic epic = epics.get(subtask.getIdEpicTask());
+                    epic.setSubtasks(subtask,2);
+                    subtask = new Subtask(name, description, status, id, subtask.idEpicTask);
                     subtasks.put(subtask.getId(), subtask);
+                    epic.setSubtasks(subtask,1);
                 }
                 if(hashMapIterator.get(id).getClass() == Epic.class) {
-                    oldEpic = (Epic) hashMapIterator.get(id);
-                    System.out.println("Old name:" + oldEpic.name + "\nInput new task name: ");
+                    epic = (Epic) hashMapIterator.get(id);
+                    System.out.println("Old name: " + epic.name + "\nInput new task name: ");
                     name = scanner.next();
-                    System.out.println("Old description:" + oldEpic.description + "\nInput new description task: ");
+                    System.out.println("Old description: " + epic.description + "\nInput new description task: ");
                     description = scanner.next();
-                    System.out.println("Old status:" + oldEpic.status + "\nSelect new status task(0 - new, 1 - working, 2 - done): ");
-                    statusId = scanner.nextInt();
-                    if(statusId == 0) {
-                        status = "NEW";
-                    } else if(statusId == 1) {
-                        status = "WORKING";
-                    } else if(statusId == 2) {
-                        status = "DONE";
-                    } else {
-                        status = "ERROR";
-                    }
-                    epic.getSubtasks();//Передать лист сабтасков
+                    List<Subtask> oldSubTasks = epic.getSubtasks();
+                    status = "NEW";
                     epic = new Epic(name, description, status, id);
                     updateEpic(epic);
+                    for(Subtask anySubTask : oldSubTasks){
+                        epic.setSubtasks(anySubTask,1);
+                    }
                 }
             }
         }
@@ -259,14 +252,14 @@ public class Manager {
         else if(subtasks.get(id) != null) {
             subtask = subtasks.get(id);
             epic = epics.get(subtask.getIdEpicTask());
-            epic.setSubtasks(subtask,2);//Не работает удаление сабтасков
+            epic.setSubtasks(subtask,2);
             subtasks.remove(id);
         }
         else if(epics.get(id) != null) {
             epic = epics.get(id);
             List<Subtask> epicSubtask = epic.getSubtasks();
             for (Subtask subtask : epicSubtask){
-                subtasks.remove(subtask);//Не работает удаление сабтасков
+                subtasks.remove(subtask.getId());
             }
             epics.remove(id);
         }
@@ -299,13 +292,13 @@ public class Manager {
     }
 
     public void printMenu(){
-        System.out.println("Menu, enter comand:");
+        System.out.println("Menu, enter command:");
         System.out.println("1 - List all tasks");//Done
         System.out.println("2 - Delete all task");//Done
         System.out.println("3 - Show task by ID");//Done
         System.out.println("4 - Create task");//Done
-        System.out.println("5 - Update task");//Done, кроме обновления статусов у Эпиков и передача подзадач при обновлении Эпика
-        System.out.println("6 - Delete task by ID");//Done, контроль у эпика ИД подзадачи, удаление эпика и подзадач
+        System.out.println("5 - Update task");//Done
+        System.out.println("6 - Delete task by ID");//Done
         System.out.println("7 - Show all task of Epic");//Done
         System.out.println("0 - Exit");
     }

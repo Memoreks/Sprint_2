@@ -31,7 +31,7 @@ public class Subtask extends Task {
         if (this.getClass() != obj.getClass()) return false;
         Subtask otherSubtask = (Subtask) obj;
         return Objects.equals(name, otherSubtask.name) && Objects.equals(description, otherSubtask.description)
-                && Objects.equals(status, otherSubtask.status);
+                && Objects.equals(status, otherSubtask.status) && (id == otherSubtask.id);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Subtask extends Task {
             hash = hash + Objects.hash(name, description);
         }
         if(status != null) {
-            hash = hash * 31 + status.hashCode();
+            hash = hash * 31 + status.hashCode() + id;
         }
         return hash;
     }

@@ -7,26 +7,30 @@ public class Sprint_2 {
 
     public static void main(String[] args) {
         //Create test tasks
-        String name = "Task";
-        String description = "Test task";
+        String name = "Task 1";
+        String description = "Test task 1";
         String status = "NEW";
         Task task = new Task(name, description, status, taskManager.addId());
         taskManager.updateTask(task);
-        name = "Epic task";
+        name = "Epic task 1";
         description = "Test epic task 1";
         Epic epic = new Epic(name, description, status, taskManager.addId());
         taskManager.updateEpic(epic);
-        name = "Subtask";
+        name = "Subtask 1";
         description = "Subtask 1";
         int idToEpic = 2;
         Subtask subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
         taskManager.updateSubtask(subtask);
+        name = "Subtask 2";
+        description = "Subtask 2";
         subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
         taskManager.updateSubtask(subtask);
+        name = "Subtask 3";
+        description = "Subtask 3";
         subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
         taskManager.updateSubtask(subtask);
 
-        Scanner scanner = new Scanner(System.in);
+       Scanner scanner = new Scanner(System.in);
         int id;
         taskManager.printMenu();
         int userInput = scanner.nextInt();
