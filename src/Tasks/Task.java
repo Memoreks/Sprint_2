@@ -1,11 +1,11 @@
-package Classes;
+package Tasks;
 
 import java.util.Objects;
 
 public class Task {
-    String name;
-    String description;
-    String status;
+    public String name;
+    public String description;
+    public String status;
     int id;
 
     public Task(String name, String description, String status, int id) {

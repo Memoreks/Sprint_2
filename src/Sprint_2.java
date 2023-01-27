@@ -1,44 +1,24 @@
 import java.util.Scanner;
 
-import Classes.*;
+import Tasks.*;
+import Managers.Task.InMemoryTaskManager;
 
 public class Sprint_2 {
-    public static Manager taskManager = new Manager();
+    public static InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
     public static void main(String[] args) {
-        //Create test tasks
-        String name = "Task 1";
-        String description = "Test task 1";
-        String status = "NEW";
-        Task task = new Task(name, description, status, taskManager.addId());
-        taskManager.updateTask(task);
-        name = "Epic task 1";
-        description = "Test epic task 1";
-        Epic epic = new Epic(name, description, status, taskManager.addId());
-        taskManager.updateEpic(epic);
-        name = "Subtask 1";
-        description = "Subtask 1";
-        int idToEpic = 2;
-        Subtask subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
-        taskManager.updateSubtask(subtask);
-        name = "Subtask 2";
-        description = "Subtask 2";
-        subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
-        taskManager.updateSubtask(subtask);
-        name = "Subtask 3";
-        description = "Subtask 3";
-        subtask = new Subtask(name, description, status, taskManager.addId(), idToEpic);
-        taskManager.updateSubtask(subtask);
 
-       Scanner scanner = new Scanner(System.in);
+        initTasks();
+
+        Scanner scanner = new Scanner(System.in);
         int id;
         taskManager.printMenu();
         int userInput = scanner.nextInt();
         while (userInput != 0) {
             if (userInput == 1) {
-                taskManager.showAllTask();
+                taskManager.showAllTasks();
             }else if (userInput == 2) {
-                taskManager.deleteAllTask();
+                taskManager.deleteAllTasks();
             }else if (userInput == 3) {
                 System.out.println("Input task ID: ");
                 id = scanner.nextInt();
@@ -62,5 +42,16 @@ public class Sprint_2 {
             userInput = scanner.nextInt();
         }
         System.out.println("Program completed");
+    }
+
+    private static void initTasks() {
+        //Create test tasks
+        taskManager.createTask("Task 1", "Test task 1", "NEW");
+
+        Epic epic2 = taskManager.createEpic("Epic task 1", "Test epic task 1");
+
+        taskManager.createSubtask("Subtask 1", "Subtask 1", "NEW", epic2);
+        taskManager.createSubtask("Subtask 2", "Subtask 2", "NEW", epic2);
+        taskManager.createSubtask("Subtask 3", "Subtask 3", "NEW", epic2);
     }
 }
