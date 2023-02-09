@@ -1,5 +1,6 @@
 package Managers.Task;
 
+import Managers.History.HistoryManager;
 import Tasks.*;
 
 import java.util.*;
@@ -44,27 +45,27 @@ public class InMemoryTaskManager implements TaskManager {
         return tasksString;
     }
 
-    public Task createTask(String name, String description, String status) {
+    public Task createTask(String name, String description, TaskStatuses status) {
         Task task = new Task(name, description, status, generateId());
 
         tasks.put(task.getId(), task);
         return task;
     }
 
-    public void updateTask(Task task, String name, String description, String status) {
+    public void updateTask(Task task, String name, String description, TaskStatuses status) {
         task.name = name;
         task.description = description;
         task.status = status;
     }
 
-    public Subtask createSubtask(String name, String description, String status, Epic taskEpic) {
+    public Subtask createSubtask(String name, String description, TaskStatuses status, Epic taskEpic) {
         Subtask subtask = new Subtask(name, description, status, generateId(), taskEpic);
         subtasks.put(subtask.getId(), subtask);
         taskEpic.addSubtask(subtask);
         return subtask;
     }
 
-    public void updateSubtask(Subtask subtask, String name, String description, String status) {
+    public void updateSubtask(Subtask subtask, String name, String description, TaskStatuses status) {
         subtask.name = name;
         subtask.description = description;
         subtask.status = status;
@@ -116,7 +117,7 @@ public class InMemoryTaskManager implements TaskManager {
         int idToEpic;
         String name;
         String description;
-        String status;
+        TaskStatuses status;
 
         System.out.println("Select task type(1 - task, 2 - subtask, 3 - epic): ");
         taskType = scanner.nextInt();
@@ -129,11 +130,11 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println("Select status task(0 - new, 1 - in_progress, 2 - done): ");
                 statusId = scanner.nextInt();
                 if (statusId == 0) {
-                    status = "NEW";
+                    status = TaskStatuses.NEW;
                 } else if (statusId == 1) {
-                    status = "IN_PROGRESS";
+                    status = TaskStatuses.IN_PROGRESS;
                 } else if (statusId == 2) {
-                    status = "DONE";
+                    status = TaskStatuses.DONE;
                 } else {
                     System.out.println("Command not support");
                     break;
@@ -145,11 +146,11 @@ public class InMemoryTaskManager implements TaskManager {
                 System.out.println("Select status task(0 - new, 1 - in_progress, 2 - done): ");
                 statusId = scanner.nextInt();
                 if (statusId == 0) {
-                    status = "NEW";
+                    status = TaskStatuses.NEW;
                 } else if (statusId == 1) {
-                    status = "IN_PROGRESS";
+                    status = TaskStatuses.IN_PROGRESS;
                 } else if (statusId == 2) {
-                    status = "DONE";
+                    status = TaskStatuses.DONE;
                 } else {
                     System.out.println("Command not support");
                     break;
@@ -177,7 +178,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTaskFromMenu() {
         String name;
         String description;
-        String status;
+        TaskStatuses status;
         int statusId;
 
         System.out.println("Input task ID: ");
@@ -193,13 +194,14 @@ public class InMemoryTaskManager implements TaskManager {
                     System.out.println("Old status: " + task.status + "\nSelect new status task(0 - new, 1 - in_progress, 2 - done): ");
                     statusId = scanner.nextInt();
                     if (statusId == 0) {
-                        status = "NEW";
+                        status = TaskStatuses.NEW;
                     } else if (statusId == 1) {
-                        status = "IN_PROGRESS";
+                        status = TaskStatuses.IN_PROGRESS;
                     } else if (statusId == 2) {
-                        status = "DONE";
+                        status = TaskStatuses.DONE;
                     } else {
-                        status = "ERROR";
+                        System.out.println("Command not support");
+                        break;
                     }
                     updateTask(task, name, description, status);
                 } else if (hashMapIterator.get(id) instanceof Subtask) {
@@ -212,13 +214,14 @@ public class InMemoryTaskManager implements TaskManager {
                             + "\nSelect new status task(0 - new, 1 - in_progress, 2 - done): ");
                     statusId = scanner.nextInt();
                     if (statusId == 0) {
-                        status = "NEW";
+                        status = TaskStatuses.NEW;
                     } else if (statusId == 1) {
-                        status = "IN_PROGRESS";
+                        status = TaskStatuses.IN_PROGRESS;
                     } else if (statusId == 2) {
-                        status = "DONE";
+                        status = TaskStatuses.DONE;
                     } else {
-                        status = "ERROR";
+                        System.out.println("Command not support");
+                        break;
                     }
                     updateSubtask(subtask, name, description, status);
                 } else if (hashMapIterator.get(id).getClass() == Epic.class) {
@@ -265,12 +268,12 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public void getTaskById(int id) {
+    public void getTaskById(int id, HistoryManager historyManager) {
         if (id <= this.getId()) {
             for (HashMap hashMapIterator : listHashMaps) {
                 if (hashMapIterator.get(id) != null) {
                     System.out.println(hashMapIterator.get(id));
-                    return;
+                    historyManager.add((Task) hashMapIterator.get(id));
                 }
             }
         } else {
@@ -280,13 +283,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     public void printMenu() {
         System.out.println("Menu, enter command:");
-        System.out.println("1 - List all tasks");//Done
-        System.out.println("2 - Delete all task");//Done
-        System.out.println("3 - Show task by ID");//Done
-        System.out.println("4 - Create task");//Done
-        System.out.println("5 - Update task");//Done
-        System.out.println("6 - Delete task by ID");//Done
-        System.out.println("7 - Show all task of Epic");//Done
+        System.out.println("1 - List all tasks");
+        System.out.println("2 - Delete all task");
+        System.out.println("3 - Show task by ID");
+        System.out.println("4 - Create task");
+        System.out.println("5 - Update task");
+        System.out.println("6 - Delete task by ID");
+        System.out.println("7 - Show all task of Epic");
+        System.out.println("8 - Show history");
         System.out.println("0 - Exit");
     }
 }

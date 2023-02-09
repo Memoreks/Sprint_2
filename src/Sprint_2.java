@@ -1,12 +1,17 @@
 import java.util.Scanner;
 
+import Managers.History.HistoryManager;
+import Managers.Managers;
+import Managers.Task.TaskManager;
 import Tasks.*;
-import Managers.Task.InMemoryTaskManager;
 
 public class Sprint_2 {
-    public static InMemoryTaskManager taskManager = new InMemoryTaskManager();
+    private static TaskManager taskManager;
+    private static HistoryManager historyManager;
 
     public static void main(String[] args) {
+        taskManager = Managers.getDefault();
+        historyManager = Managers.getDefaultHistory();
 
         initTasks();
 
@@ -22,7 +27,7 @@ public class Sprint_2 {
             }else if (userInput == 3) {
                 System.out.println("Input task ID: ");
                 id = scanner.nextInt();
-                taskManager.getTaskById(id);
+                taskManager.getTaskById(id, historyManager);
             }else if (userInput == 4) {
                 taskManager.createTask();
             }else if (userInput == 5) {
@@ -35,6 +40,8 @@ public class Sprint_2 {
                 System.out.println("Input epic ID: ");
                 id = scanner.nextInt();
                 taskManager.getAllTaskByEpic(id);
+            }else if (userInput == 8) {
+                historyManager.getHistory();
             }else{
                 System.out.println("Command " + userInput + " not supported");
             }
@@ -46,12 +53,12 @@ public class Sprint_2 {
 
     private static void initTasks() {
         //Create test tasks
-        taskManager.createTask("Task 1", "Test task 1", "NEW");
+        taskManager.createTask("Task 1", "Test task 1", TaskStatuses.NEW);
 
         Epic epic2 = taskManager.createEpic("Epic task 1", "Test epic task 1");
 
-        taskManager.createSubtask("Subtask 1", "Subtask 1", "NEW", epic2);
-        taskManager.createSubtask("Subtask 2", "Subtask 2", "NEW", epic2);
-        taskManager.createSubtask("Subtask 3", "Subtask 3", "NEW", epic2);
+        taskManager.createSubtask("Subtask 1", "Subtask 1", TaskStatuses.NEW, epic2);
+        taskManager.createSubtask("Subtask 2", "Subtask 2", TaskStatuses.NEW, epic2);
+        taskManager.createSubtask("Subtask 3", "Subtask 3", TaskStatuses.NEW, epic2);
     }
 }
